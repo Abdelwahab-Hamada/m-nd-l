@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  api-gateway:
+    build: .
+    networks:
+      - in-net
+      - ex-net
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    container_name: api-gateway
+    command: 'gunicorn app:app --bind :5000 --workers 3'
+    env_file:
+      - .env
+
+networks:
+  in-net:
+    name: in-net
+    internal: true
+  ex-net:
+    name: ex-net

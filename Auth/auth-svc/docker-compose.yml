@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    networks:
+      - in-net
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    container_name: auth-api
+    command: 'gunicorn core.wsgi:application --bind :8000 --workers 3'
+    env_file:
+      - .env
+    depends_on:
+      - pgdb
+
+  pgdb:
+    image: postgres
+    networks:
+      - in-net
+    volumes:
+      - ./db/postgresql/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    container_name: auth-pgdb
+
+networks:
+  in-net:
+    name: in-net
+    internal: true

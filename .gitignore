@@ -1,0 +1,6 @@
+__pycache__
+db
+.dockerignore
+.env
+db.sqlite3
+asgi.py
