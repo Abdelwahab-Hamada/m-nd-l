@@ -5,7 +5,9 @@ services:
     networks:
       - in-net
     volumes:
-      - .:/code
+      - type: volume
+        source: code-vol
+        target: /code
     ports:
       - "8000:8000"
     container_name: auth-api
@@ -20,7 +22,9 @@ services:
     networks:
       - in-net
     volumes:
-      - ./db/postgresql/data:/var/lib/postgresql/data
+      - type: volume
+        source: db-vol
+        target: /var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -31,3 +35,9 @@ networks:
   in-net:
     name: in-net
     internal: true
+
+volumes:
+  code-vol:
+    name: code-vol
+  db-vol:
+    name: db-vol
