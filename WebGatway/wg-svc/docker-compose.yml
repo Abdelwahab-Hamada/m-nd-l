@@ -6,7 +6,9 @@ services:
       - in-net
       - ex-net
     volumes:
-      - .:/code
+      - type: volume
+        source: code-vol
+        target: /code
     ports:
       - "5000:5000"
     container_name: api-gateway
@@ -20,3 +22,7 @@ networks:
     internal: true
   ex-net:
     name: ex-net
+
+volumes:
+  code-vol:
+    name: gw-code-vol
