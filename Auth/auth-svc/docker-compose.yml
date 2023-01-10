@@ -1,3 +1,4 @@
+
 version: '3.8'
 services:
   api:
@@ -5,13 +6,11 @@ services:
     networks:
       - in-net
     volumes:
-      - type: volume
-        source: code-vol
-        target: /code
+      - .:/code
     ports:
-      - "8000:8000"
+      - "$SVC_PORT:$SVC_PORT"
     container_name: $HOST
-    command: 'gunicorn core.wsgi:application --bind :8000 --workers 4'
+    command: sh -c "chmod +x /code/migrate.sh && sh /code/migrate.sh && /code/entrypoint.sh"
     env_file:
       - .env
     depends_on:
@@ -19,17 +18,18 @@ services:
 
   pgdb:
     image: postgres
+    restart: always
     networks:
       - in-net
     volumes:
       - type: volume
         source: db-vol
         target: /var/lib/postgresql/data
+    container_name: $DB_HOST
     environment:
       - POSTGRES_DB=$DB
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    container_name: $DB_HOST
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
 
 networks:
   in-net:
@@ -37,7 +37,5 @@ networks:
     internal: true
 
 volumes:
-  code-vol:
-    name: auth-code-vol
   db-vol:
     name: auth-db-vol
