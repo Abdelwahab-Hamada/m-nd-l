@@ -10,7 +10,7 @@ services:
     ports:
       - "$SVC_PORT:$SVC_PORT"
     container_name: $HOST
-    command: sh -c "chmod +x /code/migrate.sh && sh /code/migrate.sh && /code/entrypoint.sh"
+    command: sh -c "chmod +x ./migrate.sh && sh ./migrate.sh && ./entrypoint.sh"
     env_file:
       - .env
     depends_on:
