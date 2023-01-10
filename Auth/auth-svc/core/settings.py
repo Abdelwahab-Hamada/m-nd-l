@@ -75,11 +75,11 @@ if not DEBUG:
     DATABASES={
         'default':{
             'ENGINE':'django.db.backends.postgresql',
-            'NAME':config('POSTGRES_DB'),
-            'USER':config('POSTGRES_USER'),
-            'PASSWORD':config('POSTGRES_PASSWORD'),
-            'HOST':config('POSTGRES_DB'),
-            'PORT':int(config('POSTGRES_PORT')),
+            'HOST':config('DB_HOST'),
+            'NAME':config('DB'),
+            'USER':config('DB_USER'),
+            'PASSWORD':config('DB_PASSWORD'),
+            'PORT':int(config('DB_PORT')),
         }
     }
 

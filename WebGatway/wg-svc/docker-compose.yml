@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  api-gateway:
+  api:
     build: .
     networks:
       - in-net
@@ -11,7 +11,7 @@ services:
         target: /code
     ports:
       - "5000:5000"
-    container_name: api-gateway
+    container_name: gateway-api
     command: 'gunicorn app:app --bind :5000 --workers 3'
     env_file:
       - .env

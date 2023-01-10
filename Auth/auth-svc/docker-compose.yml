@@ -10,8 +10,8 @@ services:
         target: /code
     ports:
       - "8000:8000"
-    container_name: auth-api
-    command: 'gunicorn core.wsgi:application --bind :8000 --workers 3'
+    container_name: $HOST
+    command: 'gunicorn core.wsgi:application --bind :8000 --workers 4'
     env_file:
       - .env
     depends_on:
@@ -26,10 +26,10 @@ services:
         source: db-vol
         target: /var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    container_name: auth-pgdb
+      - POSTGRES_DB=$DB
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    container_name: $DB_HOST
 
 networks:
   in-net:
@@ -38,6 +38,6 @@ networks:
 
 volumes:
   code-vol:
-    name: code-vol
+    name: auth-code-vol
   db-vol:
-    name: db-vol
+    name: auth-db-vol
