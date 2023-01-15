@@ -34,12 +34,12 @@ services:
 
 networks:
   in-net:
-    name: auth-in-net
+    name: post-in-net               #internal net between api and db (svc in net)
     internal: true
   gateway-in-net:
-    name: gateway-in-net
+    name: gateway-in-net            #internal net between api and gateway
     internal: true
 
 volumes:
   db-vol:
-    name: auth-db-vol
+    name: post-db-vol

@@ -20,7 +20,7 @@ def register(req):
             if response.status_code == 200:
                 is_success=json_response                  #response,error
             else:
-                error=json_response
+                error=json_response,response.status_code
     except:
         pass
     return is_success,error

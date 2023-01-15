@@ -3,20 +3,20 @@ services:
   api:
     build: .
     networks:
-      - in-net
+      - gateway-in-net
       - ex-net
     volumes:
       - .:/code
     ports:
       - "5000:5000"
-    container_name: gateway-api
-    command: 'gunicorn app:app --bind :5000 --workers 4'
+    container_name: web-gateway-api
+    command: $CMD
     env_file:
       - .env
 
 networks:
-  in-net:
-    name: in-net
+  gateway-in-net:
+    name: gateway-in-net
     internal: true
   ex-net:
     name: ex-net

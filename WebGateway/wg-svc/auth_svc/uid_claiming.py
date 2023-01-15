@@ -15,7 +15,7 @@ def get_uid(uidt):
     json_response=response.json()
 
     if response.status_code == 200:
-        uid=json_response 
+        uid=json_response['DATA']['uid']
     else:
-        error=json_response
+        error=json_response,response.status_code
     return uid,error

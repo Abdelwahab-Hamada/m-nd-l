@@ -1,17 +1,26 @@
+from decouple import config
+
 from pathlib import Path
-import os
-from decouple import  config
 
-
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config("SK")
 
-DEBUG = config('DEBUG',default=False, cast=bool)
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SK')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG',default=False,cast=bool)
 
 ALLOWED_HOSTS = [
-    config("HOST",default='127.0.0.1'),
+    config('HOST',default='127.0.0.1')
 ]
+
+
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,23 +29,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'rest_framework',
-    # "corsheaders",
+    'posts',
+    'tags',
+    "graphene_django"
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-
 
 ROOT_URLCONF = 'core.urls'
 
@@ -60,6 +66,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -82,6 +89,7 @@ if not DEBUG:
 
 
 # Password validation
+# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -100,6 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
+# https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -111,31 +120,15 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL='users.User'
-
-from datetime import timedelta
-
-from uuid import uuid4
-
-AUTH_JWT={
-    'AT_KEY':'AT',
-    'RT_KEY':'RT',
-    'UIDT_KEY':'UIDT',
-    'SHORT_LIFETIME':timedelta(seconds=(int(config("SLT")) or 86400)),#in seconds
-    'LONG_LIFETIME':timedelta(days=(int(config("LLT")) or 90)),#in days
-    'DEFAULT_SECRET':config("JWT_SECRET",default=uuid4().hex)
+GRAPHENE = {
+    "SCHEMA": "core.schemas.schema"
 }
-
-REST_FRAMEWORK = {
-    'NON_FIELD_ERRORS_KEY': 'ERROR',
-
-}
-
-
