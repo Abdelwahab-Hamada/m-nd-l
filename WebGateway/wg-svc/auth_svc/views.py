@@ -26,7 +26,7 @@ def register():
     if not json_response and not error:
         return "Don't cry goback to your mother :)"
 
-    return json_response if not error else {'MESSAGE':error}
+    return json_response if not error else error
 
 @bp.route("/login",methods=["POST"])
 def auth():
@@ -47,7 +47,7 @@ def auth():
         key = config('UIDT_KEY'), 
         value = tokens[config('UIDT_KEY')],
         expires = datetime.now() + timedelta(days=90),
-        secure = False,
+        secure = True,                  #True for origins False for postman
         httponly = True,
         samesite = 'None'
     )

@@ -17,7 +17,7 @@ from . import (
 
 bp=Blueprint('post_svc', __name__,url_prefix='/')
 
-@bp.route("lost",methods=["GET"])
+@bp.route("lost-posts",methods=["POST"])
 def lost_posts():
     try:
         string=request.json['contains']
@@ -29,7 +29,7 @@ def lost_posts():
     response=gql.query(query.query)
     return response
 
-@bp.route("found",methods=["GET"])
+@bp.route("found-posts",methods=["POST"])
 def found_posts():
     try:
         string=request.json['contains']
@@ -40,7 +40,7 @@ def found_posts():
     response=gql.query(query.query)
     return response
     
-@bp.route("items",methods=["GET"])
+@bp.route("items",methods=["POST"])
 def items():
     try:
         string=request.json['contains']
@@ -52,7 +52,7 @@ def items():
     response=gql.query(query.query)
     return response
 
-@bp.route("item",methods=["GET"])
+@bp.route("item",methods=["POST"])
 def item():
     try:
         id=request.json['id']
@@ -65,7 +65,7 @@ def item():
     return response
 
 #mutations
-@bp.route("lost",methods=["POST"])
+@bp.route("post-lost",methods=["POST"])
 @login_required
 @uid_required
 def post_lost(uid):
@@ -85,7 +85,7 @@ def post_lost(uid):
     response=gql.mutate(mutation,vars)
     return response
 
-@bp.route("found",methods=["POST"])
+@bp.route("post-found",methods=["POST"])
 @login_required
 @uid_required
 def post_found(uid):
@@ -106,7 +106,7 @@ def post_found(uid):
     return response
     
 
-@bp.route("item",methods=["POST"])
+@bp.route("add-item",methods=["POST"])
 @login_required
 def add_item():
     try:
@@ -120,7 +120,7 @@ def add_item():
     response=gql.mutate(mutation,vars)
     return response
 
-@bp.route("color",methods=["POST"])
+@bp.route("add-color",methods=["POST"])
 @login_required
 def add_Color():
     try:
@@ -134,7 +134,7 @@ def add_Color():
     response=gql.mutate(mutation,vars)
     return response
 
-@bp.route("place",methods=["POST"])
+@bp.route("add-place",methods=["POST"])
 @login_required
 def add_place():
     try:

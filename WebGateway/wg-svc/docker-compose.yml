@@ -10,7 +10,7 @@ services:
     ports:
       - "5000:5000"
     container_name: web-gateway-api
-    command: $CMD
+    command: 'gunicorn app:app --bind :5000 --workers 4'
     env_file:
       - .env
 
