@@ -10,9 +10,27 @@ services:
     ports:
       - "5000:5000"
     container_name: web-gateway-api
-    command: 'gunicorn app:app --bind :5000 --workers 4'
+    command: $CMD
     env_file:
       - .env
+    depends_on:
+      - db
+
+  db:
+    image: mongo
+    restart: always
+    networks:
+      - gateway-in-net
+    volumes:
+      - type: volume
+        source: db-vol
+        target: /var/lib/mongodb/data
+    container_name: $DB_HOST
+    environment:
+      MONGO_INITDB_DATABASE: $DB
+      MONGO_INITDB_ROOT_USERNAME: $DB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
+    
 
 networks:
   gateway-in-net:
@@ -21,3 +39,6 @@ networks:
   ex-net:
     name: ex-net
 
+volumes:
+  db-vol:
+    name: gateway-db-vol

@@ -1,7 +1,11 @@
+import gridfs
+
+from bson.objectid import ObjectId
+
 from flask import (
     Blueprint,
     request,
-    make_response
+    send_file
 )
 
 from auth_svc.decorators import (
@@ -12,10 +16,24 @@ from auth_svc.decorators import (
 from . import (
     gql,
     queries,
-    mutations
+    mutations,
+    database
 )
 
 bp=Blueprint('post_svc', __name__,url_prefix='/')
+
+@bp.route("image",methods=["POST"])
+def get_image():
+    try:
+        imageID=request.json['imageID']
+        fs=gridfs.GridFS(database.mongo.db)
+        image=fs.get(ObjectId(imageID))
+    except Exception as error:
+        if str(type(error)) == "<class 'gridfs.errors.NoFile'>":
+            return {'MESSAGE':'This image had been deleted.'},404
+        return {'MESSAGE':'No image for this post.'},404
+
+    return send_file(image, download_name=f"{imageID}.png")
 
 @bp.route("lost-posts",methods=["POST"])
 def lost_posts():
@@ -65,15 +83,45 @@ def item():
     return response
 
 #mutations
+@bp.route("post-image",methods=["POST"])
+@login_required
+def post_image():
+    try:
+        files=request.files
+        image=files['img']
+    except:
+        return {'MESSAGE':'Image required.'}
+    
+    fs=gridfs.GridFS(database.mongo.db)
+    imageID = fs.put(image)
+    return {'imageID':str(imageID)}
+
+@bp.route("delete-image",methods=["POST"])
+@login_required
+def delete_image():
+    try:
+        imageID=request.json['imageID']
+    except:
+        {'MESSAGE':f'Image id required.'},404
+    
+    objectId=ObjectId(imageID)
+    fs=gridfs.GridFS(database.mongo.db)
+
+    if fs.exists(objectId):
+        fs.delete(objectId)
+        return {'MESSAGE':f'Image deleted.'}
+    return {'MESSAGE':f'Image not exists.'},404
+
+
 @bp.route("post-lost",methods=["POST"])
 @login_required
 @uid_required
 def post_lost(uid):
-    try:
+    try:        
         vars={
             "uid":uid,
             "description":request.json['description'],
-            "imageId":None,
+            "imageId":request.json.get('imageId') or None,#get is to avoid error
             "itemId":request.json['itemId'],
             "colorId":request.json['colorId'],
             "placeId":request.json['placeId'],
@@ -93,7 +141,7 @@ def post_found(uid):
         vars={
             "uid":uid,
             "description":request.json['description'],
-            "imageId":None,
+            "imageId":request.json.get('imageId') or None,#get is to avoid error
             "itemId":request.json['itemId'],
             "colorId":request.json['colorId'],
             "placeId":request.json['placeId'],

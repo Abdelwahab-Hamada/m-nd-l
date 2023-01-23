@@ -28,8 +28,9 @@ class Post(models.Model):
         verbose_name='Description'
     )
 
-    image_id=models.UUIDField(
+    image_id=models.CharField(
         blank=True,
+        max_length=24,
         null=True,
         verbose_name='Image ID'
     )
